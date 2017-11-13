@@ -120,7 +120,7 @@ def data_view():
     # sns.pairplot(train_df.loc[:, ['SalePrice', 'LotFrontage', 'GarageYrBlt', 'GarageCars', 'GarageArea']])
     # plt.show()
 
-    # TODO decide not to do dummy now, want to see the performance first
+    # dummy seems not help
     # category_features_names = map_category_to_index(train_df_selected, category_features)
     # print train_df_selected.head(3)
     # print test_df_selected.head(3)
@@ -147,58 +147,6 @@ def data_view():
     # print train_x[0:3]
     # print train_y
     return train_x, train_y, test_x, train_df, test_df
-
-
-
-    # train_df.Embarked = train_df.Embarked.fillna('S')  # random set because train_df is lack of some info about this
-    # lb.fit(train_df.loc[:, 'Embarked'])  #s embarked
-    # print lb.classes_
-    # train_df.loc[:, 'Embarked'] = lb.transform(train_df.loc[:, 'Embarked'])
-    # test_df.loc[:, 'Embarked'] = lb.transform(test_df.loc[:, 'Embarked'])
-    #
-    # train_df.Cabin = train_df.Cabin.apply(lambda x: 0 if x is np.nan else 1)
-    # test_df.Cabin = test_df.Cabin.apply(lambda x: 0 if x is np.nan else 1)
-    #
-    # train_df['FamilySize'] = train_df.SibSp + train_df.Parch + 1
-    # test_df['FamilySize'] = test_df.SibSp + test_df.Parch + 1
-    #
-    # train_df['IsAlone'] = train_df.FamilySize.apply(lambda x: 0 if x > 1 else 1)
-    # test_df['IsAlone'] = test_df.FamilySize.apply(lambda x: 0 if x > 1 else 1)
-    #
-    # feature_title(train_df)
-    # feature_title(test_df)
-    #
-    # # sns.barplot(x='Pclass', y='Age', data=train_df)
-    # # plt.show()
-    # train_df['Age'] = train_df.groupby(['Title', 'Pclass'])['Age'].transform(lambda x: x.fillna(x.median()))
-    # test_df['Age'] = test_df.groupby(['Title', 'Pclass'])['Age'].transform(lambda x: x.fillna(x.median()))
-    #
-    # age_bin = [0, 10, 60, 100]
-    # train_df['AgeSeg'] = pd.cut(train_df.Age, age_bin, labels=[0, 1, 2])
-    # test_df['AgeSeg'] = pd.cut(test_df.Age, age_bin, labels=[0, 1, 2])
-    # # print train_df.groupby(train_df.AgeSeg).mean()
-    # # print train_df.groupby(train_df.AgeSeg).count()
-    #
-    # print train_df.describe()
-    #
-    # # sns.pairplot(train_df)
-    # # plt.show()
-    #
-    # # very useful statistic
-    # # print train_df[['Embarked', 'Survived']].groupby(['Embarked'], as_index=False).mean()
-    # # print train_df[['Embarked', 'Survived']].groupby(['Embarked'], as_index=False).count()
-    #
-    # train_x = train_df.loc[:, ['Sex', 'Embarked', 'Title', 'Fare', 'Pclass', 'SibSp',
-    #                            'Parch', 'Cabin', 'Age', 'FamilySize', 'IsAlone']].values
-    # train_y = train_df.loc[:, ['Survived']].values
-    # test_x = test_df.loc[:, ['Sex', 'Embarked', 'Title', 'Fare', 'Pclass', 'SibSp',
-    #                          'Parch', 'Cabin', 'Age', 'FamilySize', 'IsAlone']].values
-    #
-    # # use original data
-    # ohe = preprocessing.OneHotEncoder(categorical_features=[0, 1, 2])  # dummy sex, embarked and title
-    # ohe.fit(train_x)
-    # train_x = ohe.transform(train_x).toarray()
-    # test_x = ohe.transform(test_x).toarray()
 
 
 def map_category_to_index(data_df, category_names):
@@ -261,11 +209,6 @@ def gridsearch_gbm(train_x, train_y, test_x, test_df):
 def gridsearch_svr(train_x, train_y, test_x, test_df):
     print "==========%s==========" % sys._getframe().f_code.co_name
     c_gamma_range = [0.0001, 0.001, 0.01, 0.1, 1, 10, 100, 1000]
-    # param_grid = [{'C': c_range,
-    #                'kernel': ['linear']},
-    #               {'C': param_range,
-    #                'kernel': ['rbf'],
-    #                'gamma': param_range}]
     tuned_parameters = {
         'C': c_gamma_range,
         'kernel': ['linear', 'rbf'],
@@ -320,7 +263,7 @@ def main():
                           SVR(kernel='linear', gamma=0.0001, C=1000),
                           GradientBoostingRegressor(n_estimators=400, max_features='auto',
                                                     learning_rate=0.11, max_depth=4),
-    # XGBRegressor(learning_rate=0.01,
+                          # XGBRegressor(learning_rate=0.01,
                           #              n_estimators=3500,
                           #              max_depth=3,
                           #              min_child_weight=1,
